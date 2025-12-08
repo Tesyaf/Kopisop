@@ -81,8 +81,8 @@
 
 @push('scripts')
 <script>
-const shopsUrl = "{{ route('api.geojson', ['type' => 'shops']) }}";
-const boundaryUrl = "{{ route('api.geojson', ['type' => 'boundary']) }}";
+const shopsUrl = "{{ route('api.geojson', ['type' => 'shops'], false) }}";
+const boundaryUrl = "{{ route('api.geojson', ['type' => 'boundary'], false) }}";
 
 function mean(arr){ if(!arr.length) return 0; return arr.reduce((a,b)=>a+b,0)/arr.length; }
 
@@ -99,9 +99,12 @@ fetch(shopsUrl).then(r=>r.json()).then(data=>{
   const icon = L.divIcon({ className:"", html:'<i class="fa-solid fa-mug-saucer" style="color:#b45309;font-size:18px;text-shadow:0 1px 2px rgba(0,0,0,0.4);"></i>', iconSize:[18,18], iconAnchor:[9,18] });
   L.geoJSON(data, { pointToLayer:(f,latlng)=>L.marker(latlng,{icon}) }).addTo(map);
 
-  fetch(boundaryUrl).then(r=>r.json()).then(bound=>{
-    L.geoJSON(bound, { style:{ color:'#22c55e', weight:2, fillOpacity:0.02 } }).addTo(map);
-  });
+  fetch(boundaryUrl)
+    .then(r=>r.ok ? r.json() : null)
+    .then(bound=>{
+      if(bound) L.geoJSON(bound, { style:{ color:'#22c55e', weight:2, fillOpacity:0.02 } }).addTo(map);
+    })
+    .catch(()=>{});
 });
 </script>
 @endpush
