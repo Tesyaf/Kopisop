@@ -74,7 +74,7 @@
 
 @push('scripts')
 <script>
-const shopsUrl = "{{ route('api.geojson', ['type' => 'shops']) }}";
+const shopsUrl = "{{ route('api.geojson', ['type' => 'shops'], false) }}";
 function mean(arr){ if(!arr.length) return 0; return arr.reduce((a,b)=>a+b,0)/arr.length; }
 function median(arr){ if(!arr.length) return 0; const s = arr.slice().sort((a,b)=>a-b); const m = Math.floor(s.length/2); return s.length%2? s[m] : (s[m-1]+s[m])/2; }
 

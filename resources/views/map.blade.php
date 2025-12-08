@@ -42,8 +42,8 @@
 
 @push('scripts')
 <script>
-const shopsUrl = "{{ route('api.geojson', ['type' => 'shops']) }}";
-const boundaryUrl = "{{ route('api.geojson', ['type' => 'boundary']) }}";
+const shopsUrl = "{{ route('api.geojson', ['type' => 'shops'], false) }}";
+const boundaryUrl = "{{ route('api.geojson', ['type' => 'boundary'], false) }}";
 
 const map = L.map('map').setView([-5.4295, 105.2625], 15);
 

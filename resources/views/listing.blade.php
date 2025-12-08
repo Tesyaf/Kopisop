@@ -84,7 +84,7 @@
 
 @push('scripts')
 <script>
-const shopsUrl = "{{ route('api.geojson', ['type' => 'shops']) }}";
+const shopsUrl = "{{ route('api.geojson', ['type' => 'shops'], false) }}";
 let shops = [];
 let filtered = [];
 let currentPage = 1;

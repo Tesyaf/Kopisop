@@ -61,7 +61,7 @@
 
 @push('scripts')
 <script>
-const shopsUrl = "{{ route('api.geojson', ['type' => 'shops']) }}";
+const shopsUrl = "{{ route('api.geojson', ['type' => 'shops'], false) }}";
 // Tambahkan mapping foto berdasarkan ID (ambil dari properties.id pada GeoJSON)
 const photoMap = {}; // isi sendiri: { 1: ['/images/coffee/1-1.jpg','/images/coffee/1-2.jpg'] }
 
