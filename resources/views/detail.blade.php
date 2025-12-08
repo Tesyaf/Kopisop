@@ -94,10 +94,11 @@ function renderShop(s){
   const gallery = document.getElementById('gallery');
   gallery.innerHTML = '';
   const coords = s.coords;
+  const fallbackId = s.id || 1;
   const images = photoMap[s.id] || [
-    `/images/coffee/${s.id || 'default'}-1.jpg`,
-    `/images/coffee/${s.id || 'default'}-2.jpg`,
-    `/images/coffee/${s.id || 'default'}-3.jpg`,
+    `/images/coffee/${fallbackId}-1.jpg`,
+    `/images/coffee/${fallbackId}-2.jpg`,
+    `/images/coffee/${fallbackId}-3.jpg`,
   ];
   images.forEach(src=>{
     const img = document.createElement('img');
