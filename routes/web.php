@@ -85,7 +85,6 @@ Route::get('/api/geojson/{type}', function (string $type) {
     return response()->json($decoded);
 })->name('api.geojson');
 
-// helper sederhana WKT -> GeoJSON untuk point dan multipolygon (tanpa ekstensi spatial)
 function wktToGeojsonPoint(string $wkt): ?array {
     if (!str_starts_with(strtoupper($wkt), 'POINT')) return null;
     $coords = trim(str_ireplace(['point','(',')'], '', $wkt));
