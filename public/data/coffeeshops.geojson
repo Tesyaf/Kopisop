@@ -1,35 +1,544 @@
 {
-"type": "FeatureCollection",
-"name": "Coffeeshop",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "id": 1, "NAMA": "Nuju Coffe Pahoman", "WAKTU_BUKA": "09.00", "WKT_TUTUP": "02.00", "HARGA": 25000, "RATING": 4.9 }, "geometry": { "type": "Point", "coordinates": [ 105.271198320841648, -5.422747449916137 ] } },
-{ "type": "Feature", "properties": { "id": 2, "NAMA": "KIYO Pahoman", "WAKTU_BUKA": "13.00", "WKT_TUTUP": "01.00", "HARGA": 50000, "RATING": 4.5 }, "geometry": { "type": "Point", "coordinates": [ 105.266772271599237, -5.421514285200035 ] } },
-{ "type": "Feature", "properties": { "id": 3, "NAMA": "OMA Backyard Coffee & Co", "WAKTU_BUKA": "00.00", "WKT_TUTUP": "23.59", "HARGA": 25000, "RATING": 4.9 }, "geometry": { "type": "Point", "coordinates": [ 105.262683208221461, -5.419311438004287 ] } },
-{ "type": "Feature", "properties": { "id": 4, "NAMA": "Manca Eatery", "WAKTU_BUKA": "00.00", "WKT_TUTUP": "23.59", "HARGA": 37500, "RATING": 4.2 }, "geometry": { "type": "Point", "coordinates": [ 105.262656068420284, -5.418940527388166 ] } },
-{ "type": "Feature", "properties": { "id": 5, "NAMA": "Hoffman Lane", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "22.00", "HARGA": 50000, "RATING": 4.6 }, "geometry": { "type": "Point", "coordinates": [ 105.265198163130776, -5.420234191244394 ] } },
-{ "type": "Feature", "properties": { "id": 6, "NAMA": "Toko Mansure", "WAKTU_BUKA": "09.00", "WKT_TUTUP": "22.00", "HARGA": 30000, "RATING": 4.7 }, "geometry": { "type": "Point", "coordinates": [ 105.267765135992335, -5.419913036930436 ] } },
-{ "type": "Feature", "properties": { "id": 7, "NAMA": "Nnoko Cafe Lampung", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "03.00", "HARGA": 37500, "RATING": 4.4 }, "geometry": { "type": "Point", "coordinates": [ 105.264662152057468, -5.420568915458943 ] } },
-{ "type": "Feature", "properties": { "id": 8, "NAMA": "Tazza Signature", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "22.00", "HARGA": 60000, "RATING": 4.3 }, "geometry": { "type": "Point", "coordinates": [ 105.264612395755307, -5.419777337924538 ] } },
-{ "type": "Feature", "properties": { "id": 9, "NAMA": "Gou Kaffie Enggal", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "22.00", "HARGA": 37500, "RATING": 5.0 }, "geometry": { "type": "Point", "coordinates": [ 105.264402062296185, -5.420075875737512 ] } },
-{ "type": "Feature", "properties": { "id": 10, "NAMA": "Nuju Coffe HQ", "WAKTU_BUKA": "07.00", "WKT_TUTUP": "00.00", "HARGA": 25000, "RATING": 4.9 }, "geometry": { "type": "Point", "coordinates": [ 105.261283246810606, -5.419858757328075 ] } },
-{ "type": "Feature", "properties": { "id": 11, "NAMA": "ROS3 GROUP", "WAKTU_BUKA": "08.30", "WKT_TUTUP": "19.00", "HARGA": 25000, "RATING": 4.3 }, "geometry": { "type": "Point", "coordinates": [ 105.265924152812318, -5.420564392158744 ] } },
-{ "type": "Feature", "properties": { "id": 12, "NAMA": "Yasa House", "WAKTU_BUKA": "09.30", "WKT_TUTUP": "22.00", "HARGA": 25000, "RATING": 4.5 }, "geometry": { "type": "Point", "coordinates": [ 105.264123879334079, -5.420899116373294 ] } },
-{ "type": "Feature", "properties": { "id": 13, "NAMA": "TeenHug", "WAKTU_BUKA": "14.00", "WKT_TUTUP": "23.00", "HARGA": 25000, "RATING": 4.9 }, "geometry": { "type": "Point", "coordinates": [ 105.262777066700551, -5.419806739375814 ] } },
-{ "type": "Feature", "properties": { "id": 14, "NAMA": "Fortune Carwash & Koffie", "WAKTU_BUKA": "09.00", "WKT_TUTUP": "19.00", "HARGA": 60000, "RATING": 4.4 }, "geometry": { "type": "Point", "coordinates": [ 105.262383539583439, -5.419462968560873 ] } },
-{ "type": "Feature", "properties": { "id": 15, "NAMA": "Mie & Dimsum Kaki Lima", "WAKTU_BUKA": "06.30", "WKT_TUTUP": "23.30", "HARGA": 37500, "RATING": 4.3 }, "geometry": { "type": "Point", "coordinates": [ 105.261164510180478, -5.419351582293533 ] } },
-{ "type": "Feature", "properties": { "id": 16, "NAMA": "Titik Kumpul Coffee & Space", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "03.00", "HARGA": 25000, "RATING": 2.7 }, "geometry": { "type": "Point", "coordinates": [ 105.262610835418371, -5.418783908118855 ] } },
-{ "type": "Feature", "properties": { "id": 17, "NAMA": "Tongkrongan Burgerbar", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "00.00", "HARGA": 25000, "RATING": 4.8 }, "geometry": { "type": "Point", "coordinates": [ 105.26321469599462, -5.420265288933242 ] } },
-{ "type": "Feature", "properties": { "id": 18, "NAMA": "De' Rosse Resto & Cafe", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "22.00", "HARGA": 37500, "RATING": 4.5 }, "geometry": { "type": "Point", "coordinates": [ 105.262531677664924, -5.420848794658604 ] } },
-{ "type": "Feature", "properties": { "id": 19, "NAMA": "The OLIV. Cafe by Double Eight", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "22.00", "HARGA": 60000, "RATING": 4.9 }, "geometry": { "type": "Point", "coordinates": [ 105.262744272774171, -5.421613232391831 ] } },
-{ "type": "Feature", "properties": { "id": 21, "NAMA": "Viscoffee", "WAKTU_BUKA": "19.00", "WKT_TUTUP": "23.00", "HARGA": 25000, "RATING": 4.9 }, "geometry": { "type": "Point", "coordinates": [ 105.261811342108629, -5.421874452978184 ] } },
-{ "type": "Feature", "properties": { "id": 22, "NAMA": "Sera Coffe", "WAKTU_BUKA": "08.00", "WKT_TUTUP": "18.00", "HARGA": 25000, "RATING": 5.0 }, "geometry": { "type": "Point", "coordinates": [ 105.261526374196265, -5.42220917719273 ] } },
-{ "type": "Feature", "properties": { "id": 23, "NAMA": "Nuju Coffee Sudirman", "WAKTU_BUKA": "09.30", "WKT_TUTUP": "00.00", "HARGA": 25000, "RATING": 4.9 }, "geometry": { "type": "Point", "coordinates": [ 105.266651273318999, -5.422828869319664 ] } },
-{ "type": "Feature", "properties": { "id": 25, "NAMA": "Mr.G Garage Cafe, Clothing and Auto Detailing", "WAKTU_BUKA": "12.00", "WKT_TUTUP": "00.00", "HARGA": 37500, "RATING": 4.6 }, "geometry": { "type": "Point", "coordinates": [ 105.266538190814089, -5.424407501088278 ] } },
-{ "type": "Feature", "properties": { "id": 26, "NAMA": "Tukamu Coffee & Tea House", "WAKTU_BUKA": "13.00", "WKT_TUTUP": "23.00", "HARGA": 25000, "RATING": 4.9 }, "geometry": { "type": "Point", "coordinates": [ 105.26629619425357, -5.424739963652728 ] } },
-{ "type": "Feature", "properties": { "id": 27, "NAMA": "The Habits Coffee", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "22.00", "HARGA": 37500, "RATING": 4.8 }, "geometry": { "type": "Point", "coordinates": [ 105.266312025804254, -5.424823644706366 ] } },
-{ "type": "Feature", "properties": { "id": 28, "NAMA": "Cipci Coffee", "WAKTU_BUKA": "19.00", "WKT_TUTUP": "00.00", "HARGA": 25000, "RATING": 5.0 }, "geometry": { "type": "Point", "coordinates": [ 105.269184321429137, -5.425045286416 ] } },
-{ "type": "Feature", "properties": { "id": 29, "NAMA": "Monang Cafe Pahoman", "WAKTU_BUKA": "10.00", "WKT_TUTUP": "22.00", "HARGA": 25000, "RATING": 4.4 }, "geometry": { "type": "Point", "coordinates": [ 105.268804364212599, -5.426978997250047 ] } },
-{ "type": "Feature", "properties": { "id": 30, "NAMA": "TOMORO COFFEE-PAHOMAN", "WAKTU_BUKA": "00.00", "WKT_TUTUP": "23.59", "HARGA": 30000, "RATING": 4.4 }, "geometry": { "type": "Point", "coordinates": [ 105.270518694987132, -5.426585470132943 ] } }
-]
+  "type": "FeatureCollection",
+  "name": "Coffeeshop",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "NAMA": "Nuju Coffe Pahoman",
+        "WAKTU_BUKA": "09.00",
+        "WKT_TUTUP": "02.00",
+        "HARGA": 25000,
+        "RATING": 4.9,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.27119832084165,
+          -5.422747449916137
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "NAMA": "KIYO Pahoman",
+        "WAKTU_BUKA": "13.00",
+        "WKT_TUTUP": "01.00",
+        "HARGA": 50000,
+        "RATING": 4.5,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26677227159924,
+          -5.421514285200035
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "NAMA": "OMA Backyard Coffee & Co",
+        "WAKTU_BUKA": "00.00",
+        "WKT_TUTUP": "23.59",
+        "HARGA": 25000,
+        "RATING": 4.9,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26268320822146,
+          -5.419311438004287
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "NAMA": "Manca Eatery",
+        "WAKTU_BUKA": "00.00",
+        "WKT_TUTUP": "23.59",
+        "HARGA": 37500,
+        "RATING": 4.2,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26265606842028,
+          -5.418940527388166
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5,
+        "NAMA": "Hoffman Lane",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 50000,
+        "RATING": 4.6,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26519816313078,
+          -5.420234191244394
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 6,
+        "NAMA": "Toko Mansure",
+        "WAKTU_BUKA": "09.00",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 30000,
+        "RATING": 4.7,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26776513599233,
+          -5.419913036930436
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7,
+        "NAMA": "Nnoko Cafe Lampung",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "03.00",
+        "HARGA": 37500,
+        "RATING": 4.4,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26466215205747,
+          -5.420568915458943
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8,
+        "NAMA": "Tazza Signature",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 60000,
+        "RATING": 4.3,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26461239575531,
+          -5.419777337924538
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 9,
+        "NAMA": "Gou Kaffie Enggal",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 37500,
+        "RATING": 5.0,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26440206229618,
+          -5.420075875737512
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 10,
+        "NAMA": "Nuju Coffe HQ",
+        "WAKTU_BUKA": "07.00",
+        "WKT_TUTUP": "00.00",
+        "HARGA": 25000,
+        "RATING": 4.9,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2612832468106,
+          -5.419858757328075
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11,
+        "NAMA": "ROS3 GROUP",
+        "WAKTU_BUKA": "08.30",
+        "WKT_TUTUP": "19.00",
+        "HARGA": 25000,
+        "RATING": 4.3,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26592415281232,
+          -5.420564392158744
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12,
+        "NAMA": "Yasa House",
+        "WAKTU_BUKA": "09.30",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 25000,
+        "RATING": 4.5,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26412387933408,
+          -5.420899116373294
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 13,
+        "NAMA": "TeenHug",
+        "WAKTU_BUKA": "14.00",
+        "WKT_TUTUP": "23.00",
+        "HARGA": 25000,
+        "RATING": 4.9,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26277706670055,
+          -5.419806739375814
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 14,
+        "NAMA": "Fortune Carwash & Koffie",
+        "WAKTU_BUKA": "09.00",
+        "WKT_TUTUP": "19.00",
+        "HARGA": 60000,
+        "RATING": 4.4,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26238353958344,
+          -5.419462968560873
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 15,
+        "NAMA": "Mie & Dimsum Kaki Lima",
+        "WAKTU_BUKA": "06.30",
+        "WKT_TUTUP": "23.30",
+        "HARGA": 37500,
+        "RATING": 4.3,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26116451018048,
+          -5.419351582293533
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 16,
+        "NAMA": "Titik Kumpul Coffee & Space",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "03.00",
+        "HARGA": 25000,
+        "RATING": 2.7,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26261083541837,
+          -5.418783908118855
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 17,
+        "NAMA": "Tongkrongan Burgerbar",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "00.00",
+        "HARGA": 25000,
+        "RATING": 4.8,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26321469599462,
+          -5.420265288933242
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 18,
+        "NAMA": "De' Rosse Resto & Cafe",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 37500,
+        "RATING": 4.5,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26253167766492,
+          -5.420848794658604
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 19,
+        "NAMA": "The OLIV. Cafe by Double Eight",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 60000,
+        "RATING": 4.9,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26274427277417,
+          -5.421613232391831
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 21,
+        "NAMA": "Viscoffee",
+        "WAKTU_BUKA": "19.00",
+        "WKT_TUTUP": "23.00",
+        "HARGA": 25000,
+        "RATING": 4.9,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26181134210863,
+          -5.421874452978184
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 22,
+        "NAMA": "Sera Coffe",
+        "WAKTU_BUKA": "08.00",
+        "WKT_TUTUP": "18.00",
+        "HARGA": 25000,
+        "RATING": 5.0,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26152637419627,
+          -5.42220917719273
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 23,
+        "NAMA": "Nuju Coffee Sudirman",
+        "WAKTU_BUKA": "09.30",
+        "WKT_TUTUP": "00.00",
+        "HARGA": 25000,
+        "RATING": 4.9,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.266651273319,
+          -5.422828869319664
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 25,
+        "NAMA": "Mr.G Garage Cafe, Clothing and Auto Detailing",
+        "WAKTU_BUKA": "12.00",
+        "WKT_TUTUP": "00.00",
+        "HARGA": 37500,
+        "RATING": 4.6,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26653819081409,
+          -5.424407501088278
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 26,
+        "NAMA": "Tukamu Coffee & Tea House",
+        "WAKTU_BUKA": "13.00",
+        "WKT_TUTUP": "23.00",
+        "HARGA": 25000,
+        "RATING": 4.9,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26629619425357,
+          -5.424739963652728
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 27,
+        "NAMA": "The Habits Coffee",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 37500,
+        "RATING": 4.8,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26631202580425,
+          -5.424823644706366
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 28,
+        "NAMA": "Cipci Coffee",
+        "WAKTU_BUKA": "19.00",
+        "WKT_TUTUP": "00.00",
+        "HARGA": 25000,
+        "RATING": 5.0,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.26918432142914,
+          -5.425045286416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 29,
+        "NAMA": "Monang Cafe Pahoman",
+        "WAKTU_BUKA": "10.00",
+        "WKT_TUTUP": "22.00",
+        "HARGA": 25000,
+        "RATING": 4.4,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2688043642126,
+          -5.426978997250047
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 30,
+        "NAMA": "TOMORO COFFEE-PAHOMAN",
+        "WAKTU_BUKA": "00.00",
+        "WKT_TUTUP": "23.59",
+        "HARGA": 30000,
+        "RATING": 4.4,
+        "ALAMAT": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.27051869498713,
+          -5.426585470132943
+        ]
+      }
+    }
+  ]
 }
