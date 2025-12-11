@@ -70,6 +70,7 @@
         <input id="am_address" name="address" class="w-full px-2 py-1 bg-[#111] border border-amber-800 rounded text-amber-100" placeholder="Alamat">
         <input type="hidden" id="am_lat" name="lat">
         <input type="hidden" id="am_lng" name="lng">
+        <input type="hidden" id="am_id" name="id">
         <div class="flex gap-2 justify-end">
           <button type="button" id="am_cancel" class="px-3 py-1 bg-gray-700 rounded">Batal</button>
           <button type="submit" id="am_submit" class="px-3 py-1 bg-amber-600 text-black rounded">Simpan</button>
@@ -87,7 +88,7 @@
 
 @push('scripts')
 <script>
-  const shopsUrl = "{{ route('api.geojson', ['type' => 'shops'], false) }}";
+  const shopsUrl = "{{ url('/api/shops') }}";
   const boundaryUrl = "{{ route('api.geojson', ['type' => 'boundary'], false) }}";
 
   const map = L.map('map', {
@@ -136,6 +137,7 @@
 
   let shopsJSON = null;
   let allFeatures = [];
+  const featureById = new Map();
 
   const listEl = document.getElementById("list");
   const searchInput = document.getElementById("searchInput");
@@ -203,13 +205,19 @@
     onEachFeature: (f, l) => {
       const p = f.properties || {};
       const detailUrl = "{{ route('detail') }}#" + encodeURIComponent(p.NAMA || '');
+      const id = p.id || null;
+      let controls = `<a href="${detailUrl}" class="text-amber-300">Lihat detail</a>`;
+      if (id) {
+        controls += ` <button class="popup-edit ml-2 text-amber-300" data-id="${id}">Edit</button>`;
+        controls += ` <button class="popup-delete ml-2 text-red-400" data-id="${id}">Hapus</button>`;
+      }
       l.bindPopup(
         `<div>
         <strong>${p.NAMA || 'Tanpa nama'}</strong><br>
         Buka: ${p.WAKTU_BUKA || '-'} - ${p.WKT_TUTUP || '-'}<br>
         Harga rata-rata: Rp ${p.HARGA || '-'}<br>
         Rating: ${p.RATING || '-'}<br>
-        <a href="${detailUrl}" class="text-amber-300">Lihat detail</a>
+        ${controls}
       </div>`
       );
     }
@@ -279,6 +287,12 @@
     .then(data => {
       shopsJSON = data;
       allFeatures = data.features || [];
+      // index features by id
+      featureById.clear();
+      allFeatures.forEach(f => {
+        const id = f.properties?.id;
+        if (id) featureById.set(Number(id), f);
+      });
       renderList(allFeatures);
       renderMarkers(allFeatures);
       focusToFeatures(allFeatures);
@@ -298,6 +312,72 @@
     "Coffee Shop": shopsLayer,
     "Batas Wilayah": boundaryLayer
   }).addTo(map);
+
+  // attach popup action handlers (edit/delete)
+  map.on('popupopen', (ev) => {
+    const container = ev.popup.getElement();
+    if (!container) return;
+    const editBtn = container.querySelector('.popup-edit');
+    const delBtn = container.querySelector('.popup-delete');
+
+    if (editBtn) {
+      editBtn.addEventListener('click', (e) => {
+        const id = editBtn.getAttribute('data-id');
+        const feature = featureById.get(Number(id));
+        if (!feature) {
+          alert('Data tidak tersedia untuk diedit');
+          return;
+        }
+        // prefill modal for edit
+        document.getElementById('am_id').value = id;
+        document.getElementById('am_name').value = feature.properties?.NAMA || '';
+        document.getElementById('am_open').value = feature.properties?.WAKTU_BUKA || '';
+        document.getElementById('am_close').value = feature.properties?.WKT_TUTUP || '';
+        document.getElementById('am_price').value = feature.properties?.HARGA || '';
+        document.getElementById('am_rating').value = feature.properties?.RATING || '';
+        document.getElementById('am_address').value = feature.properties?.ALAMAT || '';
+        const coords = feature.geometry?.coordinates || [];
+        if (coords.length >= 2) {
+          document.getElementById('am_lat').value = coords[1];
+          document.getElementById('am_lng').value = coords[0];
+        }
+        addMarkerModalEl.classList.remove('hidden');
+      });
+    }
+
+    if (delBtn) {
+      delBtn.addEventListener('click', (e) => {
+        const id = delBtn.getAttribute('data-id');
+        if (!confirm('Hapus coffeeshop ini?')) return;
+        fetch(`${shopsUrl}/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken,
+          }
+        }).then(r => {
+          if (!r.ok) throw r;
+          // remove from local arrays and re-render
+          allFeatures = allFeatures.filter(f => String(f.properties?.id) !== String(id));
+          if (shopsJSON && Array.isArray(shopsJSON.features)) {
+            shopsJSON.features = shopsJSON.features.filter(f => String(f.properties?.id) !== String(id));
+          }
+          featureById.delete(Number(id));
+          renderList(allFeatures);
+          renderMarkers(allFeatures);
+          ev.popup.remove();
+        }).catch(async err => {
+          let msg = 'Gagal menghapus';
+          try {
+            const j = await err.json();
+            msg = j.message || msg;
+          } catch (e) {}
+          alert(msg);
+        });
+      });
+    }
+  });
 
   document.getElementById("downloadBtn").onclick = () => {
     if (!shopsJSON) return;
@@ -337,6 +417,7 @@
     map.once('click', e => {
       const lat = e.latlng.lat;
       const lng = e.latlng.lng;
+      document.getElementById('am_id').value = '';
       document.getElementById('am_lat').value = lat;
       document.getElementById('am_lng').value = lng;
       addMarkerModalEl.classList.remove('hidden');
@@ -358,6 +439,7 @@
       map.removeLayer(tempMarker);
       tempMarker = null;
     }
+    document.getElementById('am_id').value = '';
   };
 
   addMarkerFormEl.addEventListener('submit', ev => {
@@ -373,47 +455,92 @@
       lng: parseFloat(document.getElementById('am_lng').value),
     };
 
-    fetch('/api/shops', {
-        method: 'POST',
+    const editId = document.getElementById('am_id').value || null;
+    if (editId) {
+      // update existing
+      fetch(`${shopsUrl}/${editId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
           'X-CSRF-TOKEN': csrfToken,
         },
         body: JSON.stringify(payload),
-      })
-      .then(r => {
+      }).then(r => {
         if (!r.ok) throw r;
         return r.json();
-      })
-      .then(feature => {
-        // prepend to feature list and re-render
-        allFeatures.unshift(feature);
-        if (!shopsJSON) shopsJSON = {
-          type: 'FeatureCollection',
-          features: []
-        };
-        shopsJSON.features.unshift(feature);
+      }).then(() => {
+        const f = featureById.get(Number(editId));
+        if (f) {
+          f.properties.NAMA = payload.name;
+          f.properties.WAKTU_BUKA = payload.open_time;
+          f.properties.WKT_TUTUP = payload.close_time;
+          f.properties.HARGA = payload.avg_price;
+          f.properties.RATING = payload.rating;
+          f.properties.ALAMAT = payload.address;
+        }
         renderList(allFeatures);
         renderMarkers(allFeatures);
-        setActive(featureKey(feature), {
-          center: true,
-          openPopup: true
-        });
         addMarkerModalEl.classList.add('hidden');
-        if (tempMarker) {
-          map.removeLayer(tempMarker);
-          tempMarker = null;
-        }
         addMarkerFormEl.reset();
-      })
-      .catch(async err => {
-        let msg = 'Gagal menyimpan';
+        document.getElementById('am_id').value = '';
+      }).catch(async err => {
+        let msg = 'Gagal menyimpan perubahan';
         try {
           const j = await err.json();
           msg = j.message || msg;
         } catch (e) {}
         alert(msg);
       });
+    } else {
+      // create new
+      fetch(shopsUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken,
+          },
+          body: JSON.stringify(payload),
+        })
+        .then(r => {
+          if (!r.ok) throw r;
+          return r.json();
+        })
+        .then(feature => {
+          // prepend to feature list and re-render
+          allFeatures.unshift(feature);
+          if (!shopsJSON) shopsJSON = {
+            type: 'FeatureCollection',
+            features: []
+          };
+          shopsJSON.features.unshift(feature);
+          if (feature.properties?.id) featureById.set(Number(feature.properties.id), feature);
+          renderList(allFeatures);
+          renderMarkers(allFeatures);
+          setActive(featureKey(feature), {
+            center: true,
+            openPopup: true
+          });
+          addMarkerModalEl.classList.add('hidden');
+          if (tempMarker) {
+            map.removeLayer(tempMarker);
+            tempMarker = null;
+          }
+          addMarkerFormEl.reset();
+          document.getElementById('am_id').value = '';
+        })
+        .catch(async err => {
+          let msg = 'Gagal menyimpan';
+          try {
+            const j = await err.json();
+            msg = j.message || msg;
+          } catch (e) {}
+          alert(msg);
+        });
+    }
   });
 </script>
 @endpush
