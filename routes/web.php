@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\CoffeeshopController;
+use Illuminate\Http\Request;
 
 Route::view('/', 'welcome')->name('home');
 Route::view('/map', 'map')->name('map');
@@ -9,6 +11,12 @@ Route::view('/listing', 'listing')->name('listing');
 Route::view('/analisis', 'analisis')->name('analisis');
 Route::view('/detail', 'detail')->name('detail');
 Route::view('/about', 'about')->name('about');
+
+// CRUD API for coffeeshops (used by map UI)
+Route::get('/api/shops', [CoffeeshopController::class, 'index']);
+Route::post('/api/shops', [CoffeeshopController::class, 'store']);
+Route::put('/api/shops/{id}', [CoffeeshopController::class, 'update']);
+Route::delete('/api/shops/{id}', [CoffeeshopController::class, 'destroy']);
 
 Route::get('/api/geojson/{type}', function (string $type) {
     $files = [
@@ -20,7 +28,7 @@ Route::get('/api/geojson/{type}', function (string $type) {
     if (env('DATA_SOURCE') === 'db') {
         try {
             if ($type === 'shops') {
-                $rows = DB::table('coffeeshops')->select('id','name','open_time','close_time','avg_price','rating','address','location_wkt')->get();
+                $rows = DB::table('coffeeshops')->select('id', 'name', 'open_time', 'close_time', 'avg_price', 'rating', 'address', 'location_wkt')->get();
 
                 $features = $rows->map(function ($r) {
                     $geom = $r->location_wkt ? self::wktToGeojsonPoint($r->location_wkt) : null;
@@ -37,7 +45,7 @@ Route::get('/api/geojson/{type}', function (string $type) {
                         ],
                         'geometry' => $geom,
                     ];
-                })->filter(fn($f)=>!is_null($f['geometry']))->values();
+                })->filter(fn($f) => !is_null($f['geometry']))->values();
 
                 return response()->json([
                     'type' => 'FeatureCollection',
@@ -46,7 +54,7 @@ Route::get('/api/geojson/{type}', function (string $type) {
             }
 
             if ($type === 'boundary') {
-                $rows = DB::table('boundaries')->select('id','name','remark','geom_wkt')->get();
+                $rows = DB::table('boundaries')->select('id', 'name', 'remark', 'geom_wkt')->get();
 
                 $features = $rows->map(function ($r) {
                     $geom = $r->geom_wkt ? self::wktToGeojsonMultiPolygon($r->geom_wkt) : null;
@@ -59,7 +67,7 @@ Route::get('/api/geojson/{type}', function (string $type) {
                         ],
                         'geometry' => $geom,
                     ];
-                })->filter(fn($f)=>!is_null($f['geometry']))->values();
+                })->filter(fn($f) => !is_null($f['geometry']))->values();
 
                 return response()->json([
                     'type' => 'FeatureCollection',
@@ -85,16 +93,18 @@ Route::get('/api/geojson/{type}', function (string $type) {
     return response()->json($decoded);
 })->name('api.geojson');
 
-function wktToGeojsonPoint(string $wkt): ?array {
+function wktToGeojsonPoint(string $wkt): ?array
+{
     if (!str_starts_with(strtoupper($wkt), 'POINT')) return null;
-    $coords = trim(str_ireplace(['point','(',')'], '', $wkt));
-    [$lon,$lat] = array_map('floatval', preg_split('/\s+/', $coords));
-    return ['type'=>'Point','coordinates'=>[$lon,$lat]];
+    $coords = trim(str_ireplace(['point', '(', ')'], '', $wkt));
+    [$lon, $lat] = array_map('floatval', preg_split('/\s+/', $coords));
+    return ['type' => 'Point', 'coordinates' => [$lon, $lat]];
 }
 
-function wktToGeojsonMultiPolygon(string $wkt): ?array {
+function wktToGeojsonMultiPolygon(string $wkt): ?array
+{
     if (!str_starts_with(strtoupper($wkt), 'MULTIPOLYGON')) return null;
-    $clean = trim(str_ireplace(['multipolygon',' '], '', $wkt));
+    $clean = trim(str_ireplace(['multipolygon', ' '], '', $wkt));
     $clean = trim($clean, '()');
     $polygons = explode(')),((', $clean);
     $coords = [];
@@ -105,12 +115,12 @@ function wktToGeojsonMultiPolygon(string $wkt): ?array {
             $points = explode(',', $ring);
             $ringCoords = [];
             foreach ($points as $pt) {
-                [$lon,$lat] = array_map('floatval', explode(' ', trim($pt)));
-                $ringCoords[] = [$lon,$lat];
+                [$lon, $lat] = array_map('floatval', explode(' ', trim($pt)));
+                $ringCoords[] = [$lon, $lat];
             }
             $polyCoords[] = $ringCoords;
         }
         $coords[] = $polyCoords;
     }
-    return ['type'=>'MultiPolygon','coordinates'=>$coords];
+    return ['type' => 'MultiPolygon', 'coordinates' => $coords];
 }
