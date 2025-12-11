@@ -179,7 +179,7 @@ class CoffeeshopController extends Controller
                         $ft['geometry'] = ['type' => 'Point', 'coordinates' => [(float)$data['lng'], (float)$data['lat']]];
                     }
                     File::put($path, json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-                    return response()->json(['success' => true]);
+                    return response()->json($ft, 200);
                 }
             }
             return response()->json(['message' => 'Feature not found'], 404);
@@ -204,7 +204,27 @@ class CoffeeshopController extends Controller
 
         $shop->update($data);
 
-        return response()->json(['success' => true]);
+        // Return updated feature
+        $feature = [
+            'type' => 'Feature',
+            'properties' => [
+                'id' => $shop->id,
+                'NAMA' => $shop->name,
+                'WAKTU_BUKA' => $shop->open_time,
+                'WKT_TUTUP' => $shop->close_time,
+                'HARGA' => $shop->avg_price,
+                'RATING' => $shop->rating,
+                'ALAMAT' => $shop->address,
+            ],
+            'geometry' => $shop->location_wkt ? (function () use ($shop) {
+                if (preg_match('/POINT\s*\(\s*([\d.\-]+)\s+([\d.\-]+)\s*\)/i', $shop->location_wkt, $m)) {
+                    return ['type' => 'Point', 'coordinates' => [(float)$m[1], (float)$m[2]]];
+                }
+                return null;
+            })() : null,
+        ];
+
+        return response()->json($feature, 200);
     }
 
     public function destroy($id)

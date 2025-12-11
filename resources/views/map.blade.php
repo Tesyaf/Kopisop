@@ -504,21 +504,11 @@
       }).then(r => {
         if (!r.ok) throw r;
         return r.json();
-      }).then(() => {
-        const f = featureById.get(Number(editId));
-        if (f) {
-          f.properties.NAMA = payload.name;
-          f.properties.WAKTU_BUKA = payload.open_time;
-          f.properties.WKT_TUTUP = payload.close_time;
-          f.properties.HARGA = payload.avg_price;
-          f.properties.RATING = payload.rating;
-          f.properties.ALAMAT = payload.address;
-        }
-        renderList(allFeatures);
-        renderMarkers(allFeatures);
+      }).then(feature => {
         addMarkerModalEl.classList.add('hidden');
         addMarkerFormEl.reset();
         document.getElementById('am_id').value = '';
+        setTimeout(reloadShopsData, 1000);
       }).catch(async err => {
         let msg = 'Gagal menyimpan perubahan';
         try {
