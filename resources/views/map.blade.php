@@ -282,65 +282,38 @@
     });
   }
 
-  // Load shops: try /api/shops first, fallback to /api/geojson?type=shops
+  // Load shops: use /api/geojson?type=shops as primary (proven to work with DB)
   const geojsonShopsUrl = "{{ route('api.geojson', ['type' => 'shops'], false) }}";
 
-  const loadShopsData = () => {
-    console.log('Attempting to load shops from:', shopsUrl);
-    return fetch(shopsUrl)
-      .then(r => {
-        console.log('Response status:', r.status);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then(data => {
-        console.log('Data from /api/shops:', data);
-        if (!data.features || data.features.length === 0) {
-          console.warn('No features in /api/shops, trying geojson endpoint');
-          throw new Error('No features');
-        }
-        return data;
-      })
-      .catch(err => {
-        console.warn('Failed to load from /api/shops:', err.message, 'trying fallback');
-        return fetch(geojsonShopsUrl)
-          .then(r => {
-            console.log('Fallback response status:', r.status);
-            if (!r.ok) throw r;
-            return r.json();
-          })
-          .then(data => {
-            console.log('Data from fallback /api/geojson?type=shops:', data);
-            return data;
-          })
-          .catch(fallbackErr => {
-            console.error('Both endpoints failed:', fallbackErr);
-            return {
-              type: 'FeatureCollection',
-              features: []
-            };
-          });
+  console.log('Loading shops from:', geojsonShopsUrl);
+  fetch(geojsonShopsUrl)
+    .then(r => {
+      console.log('Response status:', r.status);
+      if (!r.ok) throw r;
+      return r.json();
+    })
+    .then(data => {
+      console.log('Loaded shops data, features count:', (data && data.features) ? data.features.length : 0);
+      shopsJSON = data;
+      allFeatures = (data && data.features) ? data.features : [];
+      // index features by id
+      featureById.clear();
+      allFeatures.forEach(f => {
+        const id = f.properties?.id;
+        if (id) featureById.set(Number(id), f);
       });
-  };
-
-  loadShopsData().then(data => {
-    shopsJSON = data;
-    allFeatures = (data && data.features) ? data.features : [];
-    console.log('Loaded features count:', allFeatures.length);
-    // index features by id
-    featureById.clear();
-    allFeatures.forEach(f => {
-      const id = f.properties?.id;
-      if (id) featureById.set(Number(id), f);
+      renderList(allFeatures);
+      renderMarkers(allFeatures);
+      focusToFeatures(allFeatures);
+      setActive(allFeatures.length ? featureKey(allFeatures[0]) : null, {
+        center: false,
+        openPopup: true
+      });
+    })
+    .catch(err => {
+      console.error('Failed to load shops:', err);
+      renderList([]);
     });
-    renderList(allFeatures);
-    renderMarkers(allFeatures);
-    focusToFeatures(allFeatures);
-    setActive(allFeatures.length ? featureKey(allFeatures[0]) : null, {
-      center: false,
-      openPopup: true
-    });
-  });
 
   fetch(boundaryUrl)
     .then(r => r.json())
@@ -353,7 +326,6 @@
     "Batas Wilayah": boundaryLayer
   }).addTo(map);
 
-  // attach popup action handlers (edit/delete)
   map.on('popupopen', (ev) => {
     const container = ev.popup.getElement();
     if (!container) return;
@@ -407,6 +379,8 @@
           renderList(allFeatures);
           renderMarkers(allFeatures);
           ev.popup.remove();
+          // reload data after 1s to sync with DB
+          setTimeout(reloadShopsData, 1000);
         }).catch(async err => {
           let msg = 'Gagal menghapus';
           try {
@@ -443,6 +417,26 @@
   };
 
   searchInput.addEventListener("input", handleSearch);
+
+  // Helper to reload shops from geojson endpoint
+  const reloadShopsData = () => {
+    console.log('Reloading shops data...');
+    fetch(geojsonShopsUrl)
+      .then(r => r.json())
+      .then(data => {
+        shopsJSON = data;
+        allFeatures = (data && data.features) ? data.features : [];
+        featureById.clear();
+        allFeatures.forEach(f => {
+          const id = f.properties?.id;
+          if (id) featureById.set(Number(id), f);
+        });
+        renderList(allFeatures);
+        renderMarkers(allFeatures);
+        console.log('Reloaded features count:', allFeatures.length);
+      })
+      .catch(err => console.error('Failed to reload shops:', err));
+  };
 
   // --- Add marker UI & client-side create ---
   const csrfToken = "{{ csrf_token() }}";
@@ -571,6 +565,8 @@
           }
           addMarkerFormEl.reset();
           document.getElementById('am_id').value = '';
+          // reload data after 1s to sync with DB
+          setTimeout(reloadShopsData, 1000);
         })
         .catch(async err => {
           let msg = 'Gagal menyimpan';
