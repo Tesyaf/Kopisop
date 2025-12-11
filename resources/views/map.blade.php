@@ -282,25 +282,65 @@
     });
   }
 
-  fetch(shopsUrl)
-    .then(r => r.json())
-    .then(data => {
-      shopsJSON = data;
-      allFeatures = data.features || [];
-      // index features by id
-      featureById.clear();
-      allFeatures.forEach(f => {
-        const id = f.properties?.id;
-        if (id) featureById.set(Number(id), f);
+  // Load shops: try /api/shops first, fallback to /api/geojson?type=shops
+  const geojsonShopsUrl = "{{ route('api.geojson', ['type' => 'shops'], false) }}";
+
+  const loadShopsData = () => {
+    console.log('Attempting to load shops from:', shopsUrl);
+    return fetch(shopsUrl)
+      .then(r => {
+        console.log('Response status:', r.status);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(data => {
+        console.log('Data from /api/shops:', data);
+        if (!data.features || data.features.length === 0) {
+          console.warn('No features in /api/shops, trying geojson endpoint');
+          throw new Error('No features');
+        }
+        return data;
+      })
+      .catch(err => {
+        console.warn('Failed to load from /api/shops:', err.message, 'trying fallback');
+        return fetch(geojsonShopsUrl)
+          .then(r => {
+            console.log('Fallback response status:', r.status);
+            if (!r.ok) throw r;
+            return r.json();
+          })
+          .then(data => {
+            console.log('Data from fallback /api/geojson?type=shops:', data);
+            return data;
+          })
+          .catch(fallbackErr => {
+            console.error('Both endpoints failed:', fallbackErr);
+            return {
+              type: 'FeatureCollection',
+              features: []
+            };
+          });
       });
-      renderList(allFeatures);
-      renderMarkers(allFeatures);
-      focusToFeatures(allFeatures);
-      setActive(allFeatures.length ? featureKey(allFeatures[0]) : null, {
-        center: false,
-        openPopup: true
-      });
+  };
+
+  loadShopsData().then(data => {
+    shopsJSON = data;
+    allFeatures = (data && data.features) ? data.features : [];
+    console.log('Loaded features count:', allFeatures.length);
+    // index features by id
+    featureById.clear();
+    allFeatures.forEach(f => {
+      const id = f.properties?.id;
+      if (id) featureById.set(Number(id), f);
     });
+    renderList(allFeatures);
+    renderMarkers(allFeatures);
+    focusToFeatures(allFeatures);
+    setActive(allFeatures.length ? featureKey(allFeatures[0]) : null, {
+      center: false,
+      openPopup: true
+    });
+  });
 
   fetch(boundaryUrl)
     .then(r => r.json())

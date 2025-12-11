@@ -10,49 +10,60 @@ class CoffeeshopController extends Controller
 {
     public function index()
     {
-        // If configured to use file data, return the GeoJSON file so preview and map match
-        if (env('DATA_SOURCE') !== 'db') {
-            $path = base_path('public/data/coffeeshops.geojson');
-            if (!File::exists($path)) {
-                return response()->json(['type' => 'FeatureCollection', 'features' => []]);
+        // Try DB mode first if configured
+        if (env('DATA_SOURCE') === 'db') {
+            try {
+                $rows = Coffeeshop::all();
+                $features = $rows->map(function ($r) {
+                    $geom = null;
+                    if ($r->location_wkt) {
+                        $wkt = strtoupper(trim($r->location_wkt));
+                        // Parse POINT(lon lat) or POINT (lon lat)
+                        if (preg_match('/POINT\s*\(\s*([\d.\-]+)\s+([\d.\-]+)\s*\)/i', $r->location_wkt, $matches)) {
+                            $lon = (float)$matches[1];
+                            $lat = (float)$matches[2];
+                            $geom = ['type' => 'Point', 'coordinates' => [$lon, $lat]];
+                        }
+                    }
+                    return [
+                        'type' => 'Feature',
+                        'properties' => [
+                            'id' => $r->id,
+                            'NAMA' => $r->name,
+                            'WAKTU_BUKA' => $r->open_time,
+                            'WKT_TUTUP' => $r->close_time,
+                            'HARGA' => $r->avg_price,
+                            'RATING' => $r->rating,
+                            'ALAMAT' => $r->address,
+                        ],
+                        'geometry' => $geom,
+                    ];
+                })->filter(fn($f) => !is_null($f['geometry']))->values();
+
+                if (count($features) > 0) {
+                    return response()->json(['type' => 'FeatureCollection', 'features' => $features]);
+                }
+            } catch (\Throwable $e) {
+                // fallthrough to file mode
             }
-            $content = File::get($path);
-            $decoded = json_decode($content, true);
-            if ($decoded === null) {
-                return response($content, 200)->header('Content-Type', 'application/json');
-            }
-            return response()->json($decoded);
         }
 
-        $rows = Coffeeshop::all();
-
-        $features = $rows->map(function ($r) {
-            $geom = null;
-            if ($r->location_wkt && str_starts_with(strtoupper($r->location_wkt), 'POINT')) {
-                $coords = trim(str_ireplace(['POINT', '(', ')'], '', $r->location_wkt));
-                [$lon, $lat] = array_map('floatval', preg_split('/\s+/', $coords));
-                $geom = ['type' => 'Point', 'coordinates' => [$lon, $lat]];
+        // Fallback: try file from public/data/coffeeshops.geojson
+        $path = base_path('public/data/coffeeshops.geojson');
+        if (File::exists($path)) {
+            try {
+                $content = File::get($path);
+                $decoded = json_decode($content, true);
+                if (is_array($decoded) && isset($decoded['features'])) {
+                    return response()->json($decoded);
+                }
+            } catch (\Throwable $e) {
+                // continue to empty fallback
             }
+        }
 
-            return [
-                'type' => 'Feature',
-                'properties' => [
-                    'id' => $r->id,
-                    'NAMA' => $r->name,
-                    'WAKTU_BUKA' => $r->open_time,
-                    'WKT_TUTUP' => $r->close_time,
-                    'HARGA' => $r->avg_price,
-                    'RATING' => $r->rating,
-                    'ALAMAT' => $r->address,
-                ],
-                'geometry' => $geom,
-            ];
-        })->filter(fn($f) => !is_null($f['geometry']))->values();
-
-        return response()->json([
-            'type' => 'FeatureCollection',
-            'features' => $features,
-        ]);
+        // Final fallback: empty collection
+        return response()->json(['type' => 'FeatureCollection', 'features' => []]);
     }
 
     public function store(Request $request)
